@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- iOS / Safari Web App Standalone Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Gim Sejarah">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#020617">
+
+    <title>Gim Edukasi Sejarah - Dasar Ilmu Sejarah (Fase E)</title>
+    
+    <!-- Tailwind CSS CDN with offline fallback stylesheet -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        // Tailwind Configuration
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        },
+                        colors: {
+                            brand: {
+                                50: '#f0f9ff',
+                                100: '#e0f2fe',
+                                500: '#0284c7',
+                                600: '#0284c7',
+                                700: '#0369a1',
+                                800: '#075985',
+                                900: '#0c4a6e',
+                            },
+                            amber: {
+                                400: '#fbbf24',
+                                500: '#f59e0b',
+                                600: '#d97706',
+                            }
+                        },
+                        animation: {
+                            'bounce-short': 'bounce 0.6s ease-in-out 1',
+                            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- CRITICAL OFFLINE FALLBACK STYLES FOR IOS & ANDROID -->
+    <style>
+        /* Base Reset & iOS Safe Area Support */
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left, 0px);
+            --sar: env(safe-area-inset-right, 0px);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+            padding-top: var(--sat);
+            padding-bottom: var(--sab);
+            padding-left: var(--sal);
+            padding-right: var(--sar);
+        }
+
+        /* Touch & Drag Styling */
+        .draggable-item {
+            touch-action: none; /* Prevents iOS page scrolling during touch dragging */
+            cursor: grab;
+            position: relative;
+            z-index: 10;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .dragging-active {
+            opacity: 0.85;
+            scale: 1.05;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            z-index: 1000 !important;
+            pointer-events: none; /* Allows elementFromPoint to hit targets below */
+        }
+
+        .dropzone-active {
+            border-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.18) !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+        }
+
+        .selected-card {
+            border-color: #f59e0b !important;
+            background-color: #1e293b !important;
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.5);
+            outline: 3px solid #f59e0b;
+        }
+
+        /* 3D Animated Colorful Backgrounds & Glassmorphic Depth */
+        @keyframes float3d {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-20px) rotate(6deg) scale(1.08); }
+        }
+
+        @keyframes pulse3dGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.15); }
+        }
+
+        .animate-float-3d {
+            animation: float3d 8s ease-in-out infinite;
+        }
+
+        .animate-float-3d-reverse {
+            animation: float3d 10s ease-in-out infinite reverse;
+        }
+
+        .glass-3d-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .glass-3d-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.7), inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        /* Offline Fallback Layout Rules (Ensures functionality even if Tailwind CDN is offline) */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .w-full { width: 100%; }
+        .min-h-screen { min-height: 100vh; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between bg-slate-950 text-slate-100">
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="relative w-full min-h-screen flex flex-col justify-between overflow-hidden">
+
+        <!-- AUDIO CONTROL GLOBAL BUTTON -->
+        <button id="global-sound-toggle" onclick="toggleAudio()" class="fixed top-4 right-4 z-50 bg-slate-900/90 hover:bg-slate-800 text-amber-400 p-3.5 rounded-2xl shadow-xl border border-slate-700/80 transition-all active:scale-95 flex items-center gap-2.5 text-xs sm:text-sm font-bold backdrop-blur-md">
+            <i id="sound-icon" class="fa-solid fa-volume-high text-base sm:text-lg"></i>
+            <span id="sound-text" class="hidden sm:inline">Suara: On</span>
+        </button>
+
+        <!-- ==================== 1. HALAMAN LOGIN / IDENTITAS ==================== -->
+        <section id="screen-login" class="flex-1 flex items-center justify-center p-4 sm:p-6 min-h-screen">
+            <div class="w-full max-w-lg bg-slate-900/90 border border-slate-800 backdrop-blur-xl p-6 sm:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
+                <!-- Background Accent Glows -->
+                <div class="absolute -top-16 -right-16 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-16 -left-16 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="text-center mb-8 relative">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-amber-500/10 text-amber-400 rounded-2xl mb-4 border border-amber-500/20 shadow-inner">
+                        <i class="fa-solid fa-hourglass-half text-4xl animate-pulse"></i>
+                    </div>
+                    <span class="px-3.5 py-1 bg-sky-950 text-sky-400 border border-sky-800/60 rounded-full text-xs font-bold uppercase tracking-wider block w-fit mx-auto mb-2">
+                        IPS Sejarah • Kelas 11 Fase E
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Gim Edukasi Sejarah</h1>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-1">Jelajahi & Menelaah Konsep Dasar Ilmu Sejarah</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="space-y-5 relative">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Nama Lengkap Siswa</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                <i class="fa-solid fa-user-graduate"></i>
+                            </span>
+                            <input type="text" id="input-nama" required placeholder="Masukkan nama lengkap siswa..." class="w-full pl-11 pr-4 py-3.5 bg-slate-950/80 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-sm sm:text-base transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Kelas / No. Absen</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                <i class="fa-solid fa-id-card"></i>
+                            </span>
+                            <input type="text" id="input-kelas" required placeholder="Contoh: XI-1 / 15" class="w-full pl-11 pr-4 py-3.5 bg-slate-950/80 border border-slate-700/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-sm sm:text-base transition-all">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-base sm:text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-3">
+                        <span>MASUK KE GAME</span>
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-4 border-t border-slate-800 text-center">
+                    <p class="text-xs text-slate-400 font-medium">
+                        Pengembang: <span class="text-slate-200 font-bold">Dirlan, S.Pd.I., M. Si</span>
+                    </p>
+                    <p class="text-[11px] text-slate-500">Guru SMAN 9 Sidenreng Rappang</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 2. DASHBOARD MENU UTAMA ==================== -->
+        <section id="screen-dashboard" class="hidden flex-1 flex flex-col justify-between p-4 sm:p-8 max-w-5xl mx-auto w-full min-h-screen">
+            <div>
+                <!-- Header Greeting -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900/80 border border-slate-800 p-5 sm:p-6 rounded-3xl mt-2 backdrop-blur-md">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 font-black rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                            <i class="fa-solid fa-user-ninja"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Selamat Datang!</span>
+                            <h2 id="dash-player-name" class="text-xl sm:text-2xl font-black text-white">Siswa Sejarah</h2>
+                            <p id="dash-player-class" class="text-xs text-slate-400">Kelas XI / No. -</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-950/80 px-4 py-2.5 rounded-xl border border-slate-800">
+                        <i class="fa-solid fa-trophy text-amber-400 text-lg"></i>
+                        <span class="text-xs text-slate-400 font-bold uppercase">Skor Tertinggi:</span>
+                        <span id="dash-high-score" class="text-lg font-black text-amber-400">0</span>
+                    </div>
+                </div>
+
+                <!-- Menu Navigation Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 sm:mt-8">
+                    <!-- Mulai Bermain (Main Action) -->
+                    <button onclick="startGame()" class="md:col-span-2 group relative overflow-hidden bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 p-6 sm:p-8 rounded-3xl text-slate-950 font-black text-left shadow-2xl transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] border border-amber-400/40">
+                        <div class="absolute -right-6 -bottom-6 text-slate-950/10 text-9xl group-hover:scale-110 transition-transform pointer-events-none">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div>
+                                <span class="px-3 py-1 bg-slate-950/20 rounded-full text-xs font-bold uppercase tracking-wider text-slate-900 inline-block mb-2">Tantangan Kinestetik Interaktif</span>
+                                <h3 class="text-2xl sm:text-3xl font-black">MULAI BERMAIN GAME</h3>
+                                <p class="text-slate-900/80 text-xs sm:text-sm mt-1 font-medium max-w-md">Uji pemahaman konsep dasar ilmu sejarah melalui 8 tantangan Drag & Drop & Touch Match seru!</p>
+                            </div>
+                            <div class="w-14 h-14 bg-slate-950 text-amber-400 rounded-2xl flex items-center justify-center text-2xl shadow-xl group-hover:translate-x-2 transition-transform shrink-0">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Pendahuluan CP-TP -->
+                    <button onclick="openModal('modal-cptp')" class="bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 p-5 rounded-2xl text-left transition-all hover:border-sky-500/40 flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center text-xl border border-sky-500/20 group-hover:bg-sky-500 group-hover:text-slate-950 transition-colors">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm sm:text-base">Pendahuluan & CP-TP</h4>
+                                <p class="text-xs text-slate-400">Capaian & Tujuan Pembelajaran</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-sky-400 transition-colors"></i>
+                    </button>
+
+                    <!-- Petunjuk Permainan -->
+                    <button onclick="openModal('modal-petunjuk')" class="bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 p-5 rounded-2xl text-left transition-all hover:border-emerald-500/40 flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-xl border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+                                <i class="fa-solid fa-hand-pointer"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm sm:text-base">Petunjuk Permainan</h4>
+                                <p class="text-xs text-slate-400">Kontrol Drag, Touch & Navigasi</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
+                    </button>
+
+                    <!-- Materi Pembelajaran -->
+                    <button onclick="openModal('modal-materi')" class="bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 p-5 rounded-2xl text-left transition-all hover:border-purple-500/40 flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-xl border border-purple-500/20 group-hover:bg-purple-500 group-hover:text-slate-950 transition-colors">
+                                <i class="fa-solid fa-book-open"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm sm:text-base">Materi Pembelajaran</h4>
+                                <p class="text-xs text-slate-400">Rangkuman ringkas ilmu sejarah</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-purple-400 transition-colors"></i>
+                    </button>
+
+                    <!-- Info Pengembang -->
+                    <button onclick="openModal('modal-pengembang')" class="bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 p-5 rounded-2xl text-left transition-all hover:border-amber-500/40 flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-xl border border-amber-500/20 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
+                                <i class="fa-solid fa-user-gear"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm sm:text-base">Info Pengembang</h4>
+                                <p class="text-xs text-slate-400">Profil Guru & Instansi</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-amber-400 transition-colors"></i>
+                    </button>
+                </div>
+            </div>
+
+            <footer class="text-center py-6 border-t border-slate-800/60 mt-8">
+                <p class="text-xs text-slate-400">© 2026 Gim Edukasi Sejarah SMA • SMAN 9 Sidenreng Rappang</p>
+            </footer>
+        </section>
+
+
+        <!-- ==================== 3. MODUL INFORMASI & PRE-GAME STUDY (MODALS) ==================== -->
+
+        <!-- MODAL CP-TP -->
+        <div id="modal-cptp" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative">
+                <button onclick="closeModal('modal-cptp')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-bullseye text-lg"></i></div>
+                    <h3 class="text-xl font-bold text-white">Pendahuluan & CP-TP</h3>
+                </div>
+                <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider block mb-1">Mata Pelajaran</span>
+                        <p class="font-bold text-white">Ilmu Pengetahuan Sosial (IPS) - Sejarah</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider block mb-1">Fase / Kelas</span>
+                        <p class="font-bold text-white">Fase E / Kelas 11 (SMA)</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider block mb-1">Capaian Pembelajaran (CP)</span>
+                        <p class="leading-relaxed">Murid mampu menelaah konsep dasar ilmu sejarah dan mengaplikasikannya dalam menganalisis peristiwa masa lalu secara kritis, kronologis, dan kontekstual.</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="text-[11px] font-bold text-sky-400 uppercase tracking-wider block mb-1">Tujuan Pembelajaran (TP)</span>
+                        <p class="leading-relaxed">Menelaah konsep dasar ilmu sejarah meliputi berpikir diakronik, sinkronik, tiga unsur utama (manusia, ruang, waktu), perubahan dan keberlanjutan, sumber sejarah, metode penelitian, serta latar belakang penjelajahan samudra.</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-cptp')" class="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold rounded-xl text-white text-sm transition-colors">Tutup</button>
+            </div>
+        </div>
+
+        <!-- MODAL PETUNJUK -->
+        <div id="modal-petunjuk" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative">
+                <button onclick="closeModal('modal-petunjuk')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-hand-pointer text-lg"></i></div>
+                    <h3 class="text-xl font-bold text-white">Petunjuk Permainan</h3>
+                </div>
+                <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                    <div class="flex items-start gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="w-8 h-8 bg-amber-500/20 text-amber-400 font-extrabold rounded-lg flex items-center justify-center shrink-0">1</div>
+                        <p><strong class="text-white">Dua Cara Interaksi:</strong> Seret (Drag) kartu soal ke area target yang sesuai pada layar sentuh/mouse, ATAU Sentuh/Klik kartu soal lalu Sentuh/Klik area target untuk memasangkannya.</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="w-8 h-8 bg-amber-500/20 text-amber-400 font-extrabold rounded-lg flex items-center justify-center shrink-0">2</div>
+                        <p><strong class="text-white">Optimal di Semua Perangkat:</strong> Mendukung penuh HP iOS (iPhone), Tablet (iPad/Android), Laptop, hingga Papan Tulis Digital (Smartboard).</p>
+                    </div>
+                    <div class="flex items-start gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <div class="w-8 h-8 bg-amber-500/20 text-amber-400 font-extrabold rounded-lg flex items-center justify-center shrink-0">3</div>
+                        <p><strong class="text-white">Dapat Dibuka Offline:</strong> Aplikasi dapat dibuka kapan saja tanpa ketergantungan koneksi internet.</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-petunjuk')" class="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold rounded-xl text-white text-sm transition-colors">Tutup</button>
+            </div>
+        </div>
+
+        <!-- MODAL MATERI PEMBELAJARAN -->
+        <div id="modal-materi" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative">
+                <button onclick="closeModal('modal-materi')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-book-open text-lg"></i></div>
+                    <h3 class="text-xl font-bold text-white">Rangkuman Konsep Dasar Ilmu Sejarah</h3>
+                </div>
+                
+                <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                    <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 mb-2 text-sm sm:text-base">1. Pendekatan Diakronik vs Sinkronik</h4>
+                        <p class="leading-relaxed"><strong class="text-white">Diakronik (Kronologis):</strong> Mempelajari sejarah yang memanjang dalam waktu tetapi menyempit dalam ruang. Berfokus pada urutan kronologis kejadian.</p>
+                        <p class="leading-relaxed mt-2"><strong class="text-white">Sinkronik:</strong> Mempelajari sejarah yang meluas dalam ruang tetapi terbatas dalam waktu. Menganalisis kondisi, struktur sosial, atau ekonomi secara mendalam pada satu masa tertentu.</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 mb-2 text-sm sm:text-base">2. Tiga Unsur Utama Sejarah</h4>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong class="text-white">Manusia:</strong> Subjek dan objek utama pelaku peristiwa sejarah.</li>
+                            <li><strong class="text-white">Ruang (Spasial):</strong> Tempat atau arena terjadinya peristiwa sejarah.</li>
+                            <li><strong class="text-white">Waktu (Temporal):</strong> Kapan peristiwa sejarah tersebut terjadi.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 mb-2 text-sm sm:text-base">3. Perubahan & Keberlanjutan</h4>
+                        <p class="leading-relaxed"><strong class="text-white">Perubahan:</strong> Pergeseran keadaan masyarakat dari satu kondisi ke kondisi lain.</p>
+                        <p class="leading-relaxed mt-1"><strong class="text-white">Keberlanjutan:</strong> Tradisi atau keadaan yang diwariskan dan terus berlanjut dari masa lalu ke masa kini.</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 mb-2 text-sm sm:text-base">4. Sumber Sejarah & Metode Penelitian</h4>
+                        <p class="leading-relaxed"><strong class="text-white">Sumber Primer:</strong> Kesaksian langsung dari pelaku/saksi mata (Prasasti, Rekaman Suara, Naskah Asli).</p>
+                        <p class="leading-relaxed mt-1"><strong class="text-white">Sumber Sekunder:</strong> Hasil kajian pihak kedua (Buku teks, ensiklopedia, analisis sejarawan).</p>
+                        <p class="leading-relaxed mt-2"><strong class="text-white">Langkah Metode Sejarah:</strong> Heuristik (Pengumpulan) ➔ Kritik/Verifikasi (Uji keabsahan) ➔ Interpretasi (Penafsiran) ➔ Historiografi (Penulisan).</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800">
+                        <h4 class="font-bold text-amber-400 mb-2 text-sm sm:text-base">5. Motivasi Kedatangan Bangsa Barat</h4>
+                        <p class="leading-relaxed">Dipicu oleh jatuhnya Konstantinopel (1453) dan motivasi <strong class="text-white">3G (Gold, Gospel, Glory)</strong> serta pencarian rempah-rempah.</p>
+                    </div>
+                </div>
+
+                <button onclick="closeModal('modal-materi')" class="mt-6 w-full py-3.5 bg-purple-600 hover:bg-purple-500 font-bold rounded-xl text-white text-sm transition-colors shadow-lg shadow-purple-600/20">Saya Siap Menjalani Tantangan!</button>
+            </div>
+        </div>
+
+        <!-- MODAL PENGEMBANG -->
+        <div id="modal-pengembang" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative">
+                <button onclick="closeModal('modal-pengembang')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                <div class="w-20 h-20 bg-amber-500/10 text-amber-400 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-4 border border-amber-500/20">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <h3 class="text-xl font-black text-white">Dirlan, S.Pd.I., M. Si</h3>
+                <p class="text-amber-400 text-xs font-bold mt-0.5 uppercase tracking-wider">Guru SMAN 9 Sidenreng Rappang</p>
+                <div class="mt-6 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-2 text-left">
+                    <p><i class="fa-solid fa-school text-amber-400 mr-2"></i><strong>Instansi:</strong> SMAN 9 Sidenreng Rappang</p>
+                    <p><i class="fa-solid fa-book-bookmark text-amber-400 mr-2"></i><strong>Mata Pelajaran:</strong> IPS / Sejarah</p>
+                    <p><i class="fa-solid fa-laptop-code text-amber-400 mr-2"></i><strong>Pengembang:</strong> Aplikasi Gim Edukasi Pembelajaran Interaktif</p>
+                </div>
+                <button onclick="closeModal('modal-pengembang')" class="mt-6 w-full py-3 bg-slate-800 hover:bg-slate-700 font-bold rounded-xl text-white text-sm transition-colors">Tutup</button>
+            </div>
+        </div>
+
+        <!-- MODAL KONFIRMASI KELUAR GAME -->
+        <div id="modal-exit-confirm" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 text-center shadow-2xl relative">
+                <div class="w-16 h-16 bg-rose-500/10 text-rose-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 border border-rose-500/20 shadow-inner">
+                    <i class="fa-solid fa-door-open"></i>
+                </div>
+                <h3 class="text-xl font-black text-white mb-1">Keluar dari Game?</h3>
+                <p class="text-slate-400 text-xs mb-6">Progres ronde yang sedang berjalan tidak akan disimpan.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeModal('modal-exit-confirm')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs sm:text-sm transition-colors">
+                        Batal
+                    </button>
+                    <button onclick="exitToDashboard()" class="flex-1 py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs sm:text-sm transition-colors shadow-lg shadow-rose-600/20">
+                        Ya, Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== 4. GAME ARENA ==================== -->
+        <section id="screen-game" class="hidden flex-1 flex flex-col justify-between p-3 sm:p-6 max-w-6xl mx-auto w-full min-h-screen relative">
+            
+            <!-- DYNAMIC 3D COLORFUL BACKGROUND MESH & FLOATING ORBS -->
+            <div id="game-bg-mesh" class="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-950 to-purple-950 transition-all duration-700 pointer-events-none -z-10"></div>
+            <div id="game-orb-1" class="absolute top-12 left-10 w-72 h-72 rounded-full filter blur-3xl opacity-50 bg-purple-500 animate-float-3d pointer-events-none -z-10 transition-all duration-700"></div>
+            <div id="game-orb-2" class="absolute bottom-12 right-10 w-80 h-80 rounded-full filter blur-3xl opacity-50 bg-indigo-500 animate-float-3d-reverse pointer-events-none -z-10 transition-all duration-700"></div>
+
+            <!-- HUD HEADER STATUS -->
+            <div class="bg-slate-900/90 border border-slate-700/80 p-4 rounded-2xl backdrop-blur-xl flex flex-wrap items-center justify-between gap-3 shadow-2xl">
+                <!-- Player Info -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center font-black text-lg shadow-lg shadow-amber-500/30">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <div>
+                        <p id="game-hud-name" class="text-xs sm:text-sm font-black text-white leading-tight">Nama Siswa</p>
+                        <p id="game-hud-level" class="text-xs text-amber-400 font-bold">Ronde 1 / 8</p>
+                    </div>
+                </div>
+
+                <!-- Stars Indicator -->
+                <div class="flex items-center gap-1.5 text-amber-400 text-base sm:text-lg bg-slate-950/80 px-3.5 py-1.5 rounded-xl border border-slate-800 shadow-inner">
+                    <i id="star-1" class="fa-solid fa-star"></i>
+                    <i id="star-2" class="fa-solid fa-star"></i>
+                    <i id="star-3" class="fa-solid fa-star"></i>
+                </div>
+
+                <!-- Live Score -->
+                <div class="flex items-center gap-2 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Skor:</span>
+                    <span id="game-hud-score" class="text-lg sm:text-xl font-black text-amber-400">0</span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 mt-1 shadow-inner">
+                    <div id="game-progress-bar" class="bg-gradient-to-r from-amber-500 via-emerald-400 to-sky-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+
+            <!-- CHALLENGE ARENA CONTAINER (3D GLASS BOX) -->
+            <div id="challenge-arena-box" class="my-4 flex-1 flex flex-col justify-center bg-slate-900/75 border border-slate-700/80 rounded-3xl p-4 sm:p-8 backdrop-blur-2xl relative overflow-hidden shadow-2xl transition-all duration-500">
+                <!-- Instruction Header for Round -->
+                <div class="text-center mb-5">
+                    <span id="challenge-badge" class="px-3.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2 shadow-sm transition-all">
+                        Kategori Drag & Drop
+                    </span>
+                    <h3 id="challenge-title" class="text-xl sm:text-3xl font-black text-white tracking-tight drop-shadow-md">Judul Tantangan</h3>
+                    <p id="challenge-desc" class="text-xs sm:text-sm text-slate-200 mt-1.5 max-w-xl mx-auto font-medium">Petunjuk tantangan...</p>
+                    <p class="text-[11px] text-amber-300/90 mt-2 font-semibold bg-slate-950/60 py-1 px-3 rounded-full w-fit mx-auto border border-amber-500/20"><i class="fa-solid fa-hand-pointer mr-1"></i>Sentuh/Seret (drag) kartu ke kotak target, ATAU sentuh kartu lalu sentuh kotaknya.</p>
+                </div>
+
+                <!-- DYNAMIC CHALLENGE CONTENT AREA -->
+                <div id="challenge-content" class="w-full">
+                    <!-- Dynamic JS Inject -->
+                </div>
+            </div>
+
+            <!-- FOOTER CONTROLS & FEEDBACK TOAST -->
+            <div class="flex items-center justify-between gap-4">
+                <button onclick="confirmExitGame()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs sm:text-sm transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Keluar Game</span>
+                </button>
+
+                <div id="feedback-toast" class="hidden flex-1 max-w-md text-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold shadow-lg transition-all">
+                    <!-- Feedback Toast Text -->
+                </div>
+
+                <button id="btn-next-round" onclick="nextRound()" class="hidden px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-xs sm:text-sm transition-all transform active:scale-95 flex items-center gap-2 shadow-lg shadow-emerald-500/20">
+                    <span>Lanjut Ronde</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ==================== 5. HALAMAN SELEBRASI / HASIL AKHIR ==================== -->
+        <section id="screen-result" class="hidden flex-1 flex items-center justify-center p-4 sm:p-8 min-h-screen">
+            <div class="w-full max-w-md bg-slate-900 border border-slate-800 p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="w-24 h-24 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4 shadow-xl border border-amber-300/40 animate-bounce-short">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <span class="px-3.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-xs font-bold uppercase tracking-wider inline-block mb-2">
+                    Tantangan Selesai!
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-black text-white">Luar Biasa!</h2>
+                <p id="result-message" class="text-slate-300 text-xs sm:text-sm mt-1">Kamu telah berhasil menelaah seluruh konsep dasar ilmu sejarah.</p>
+
+                <!-- Final Score Badge -->
+                <div class="my-6 bg-slate-950 p-6 rounded-2xl border border-slate-800">
+                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Skor Akhir Kamu</p>
+                    <p id="result-final-score" class="text-5xl font-black text-amber-400">800</p>
+                    
+                    <div id="result-stars" class="flex justify-center gap-2 text-2xl text-amber-400 mt-3">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="startGame()" class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl text-base shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Main Lagi</span>
+                    </button>
+                    <button onclick="showScreen('screen-dashboard')" class="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-sm transition-colors">
+                        Kembali ke Menu Utama
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT LOGIC & SYNTHESIZER ==================== -->
+    <script>
+        /* ==================== WEB AUDIO API SYNTHESIZER (iOS SAFE) ==================== */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.isMuted = false;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) {
+                        this.ctx = new AudioContext();
+                    }
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playClick() {
+                if (this.isMuted) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.05);
+                } catch(e) {}
+            }
+
+            playCorrect() {
+                if (this.isMuted) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.08);
+                        gain.gain.setValueAtTime(0.25, this.ctx.currentTime + idx * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + idx * 0.08 + 0.2);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(this.ctx.currentTime + idx * 0.08);
+                        osc.stop(this.ctx.currentTime + idx * 0.08 + 0.2);
+                    });
+                } catch(e) {}
+            }
+
+            playWrong() {
+                if (this.isMuted) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(110, this.ctx.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.25);
+                } catch(e) {}
+            }
+
+            playVictory() {
+                if (this.isMuted) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const notes = [523.25, 659.25, 783.99, 987.77, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.1);
+                        gain.gain.setValueAtTime(0.2, this.ctx.currentTime + idx * 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + idx * 0.1 + 0.3);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(this.ctx.currentTime + idx * 0.1);
+                        osc.stop(this.ctx.currentTime + idx * 0.1 + 0.3);
+                    });
+                } catch(e) {}
+            }
+        }
+
+        const sounds = new SoundEngine();
+
+        function toggleAudio() {
+            sounds.init();
+            sounds.isMuted = !sounds.isMuted;
+            const icon = document.getElementById('sound-icon');
+            const text = document.getElementById('sound-text');
+            if (sounds.isMuted) {
+                if (icon) icon.className = 'fa-solid fa-volume-xmark text-rose-400 text-base sm:text-lg';
+                if (text) text.textContent = 'Suara: Off';
+            } else {
+                if (icon) icon.className = 'fa-solid fa-volume-high text-amber-400 text-base sm:text-lg';
+                if (text) text.textContent = 'Suara: On';
+            }
+        }
+
+        // Global Game State
+        const gameState = {
+            playerName: '',
+            playerClass: '',
+            score: 0,
+            highScore: parseInt(localStorage.getItem('gim_sejarah_highscore') || '0', 10),
+            currentRound: 0,
+            selectedCardId: null,
+            roundAnswered: false,
+            roundItemsLeft: 0
+        };
+
+        // Initialize highscore display on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hsEl = document.getElementById('dash-high-score');
+            if (hsEl) hsEl.textContent = gameState.highScore;
+        });
+
+        // 8 Educational Challenge Rounds with 3D Topic Color Themes
+        const challengeRounds = [
+            {
+                badge: "Pendekatan Sejarah",
+                title: "Klasifikasi Diakronik vs Sinkronik",
+                desc: "Kelompokkan pernyataan sejarah berikut ke dalam pendekatan Diakronik (Kronologis) atau Sinkronik (Kajian Luas Satu Masa).",
+                type: "category",
+                theme: {
+                    bg: "from-purple-950 via-slate-950 to-indigo-950",
+                    glow1: "bg-purple-600/35",
+                    glow2: "bg-indigo-600/35",
+                    border: "border-purple-500/50",
+                    badge: "bg-purple-500/20 text-purple-300 border-purple-400/40"
+                },
+                targets: [
+                    { id: "diakronik", label: "Diakronik (Kronologis)", icon: "fa-timeline" },
+                    { id: "sinkronik", label: "Sinkronik (Struktural)", icon: "fa-layer-group" }
+                ],
+                items: [
+                    { id: "i1", text: "Mengkaji urutan perang Diponegoro dari tahun 1825 sampai 1830.", target: "diakronik" },
+                    { id: "i2", text: "Menganalisis kondisi ekonomi masyarakat Indonesia pada Krisis Moneter 1998.", target: "sinkronik" },
+                    { id: "i3", text: "Penelusuran kronologis silsilah raja-raja Kerajaan Majapahit.", target: "diakronik" },
+                    { id: "i4", text: "Studi mendalam struktur sosial masyarakat Batavia abad ke-17.", target: "sinkronik" }
+                ]
+            },
+            {
+                badge: "Unsur Utama",
+                title: "Tiga Unsur Utama Sejarah",
+                desc: "Cocokkan fakta sejarah berikut dengan tiga unsur utama sejarah yang tepat (Manusia, Ruang, atau Waktu).",
+                type: "category",
+                theme: {
+                    bg: "from-emerald-950 via-slate-950 to-teal-950",
+                    glow1: "bg-emerald-600/35",
+                    glow2: "bg-amber-500/30",
+                    border: "border-emerald-500/50",
+                    badge: "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
+                },
+                targets: [
+                    { id: "manusia", label: "Manusia (Subjek/Objek)", icon: "fa-user-group" },
+                    { id: "ruang", label: "Ruang (Spasial)", icon: "fa-location-dot" },
+                    { id: "waktu", label: "Waktu (Temporal)", icon: "fa-clock" }
+                ],
+                items: [
+                    { id: "u1", text: "Ir. Soekarno dan Drs. Mohammad Hatta membacakan teks Proklamasi.", target: "manusia" },
+                    { id: "u2", text: "Peristiwa dibacakan di Jalan Pegangsaan Timur No. 56 Jakarta.", target: "ruang" },
+                    { id: "u3", text: "Proklamasi Kemerdekaan terjadi pada tanggal 17 Agustus 1945.", target: "waktu" }
+                ]
+            },
+            {
+                badge: "Dinamika Sejarah",
+                title: "Perubahan vs Keberlanjutan",
+                desc: "Kelompokkan setiap peristiwa ke kotak Perubahan atau Keberlanjutan, lalu tekan tombol Periksa Jawaban.",
+                type: "category",
+                checkMode: true,
+                theme: {
+                    bg: "from-amber-950 via-slate-950 to-rose-950",
+                    glow1: "bg-amber-500/35",
+                    glow2: "bg-rose-600/35",
+                    border: "border-amber-500/50",
+                    badge: "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                },
+                targets: [
+                    { id: "perubahan", label: "Perubahan (Change)", icon: "fa-arrows-rotate" },
+                    { id: "keberlanjutan", label: "Keberlanjutan (Continuity)", icon: "fa-infinity" }
+                ],
+                items: [
+                    { id: "p1", text: "Peralihan bentuk pemerintahan Indonesia dari Monarki Kerajaan ke Republik.", target: "perubahan" },
+                    { id: "p2", text: "Tradisi gotong royong dan musyawarah yang tetap dipertahankan hingga kini.", target: "keberlanjutan" },
+                    { id: "p3", text: "Penggunaan teknologi internet menggantikan mesin ketik dalam administrasi.", target: "perubahan" },
+                    { id: "p4", text: "Sistem irigasi pertanian tradisional yang masih dipakai sejak zaman dahulu.", target: "keberlanjutan" }
+                ]
+            },
+            {
+                badge: "Metode Penelitian",
+                title: "Tahapan Metode Penelitian Sejarah",
+                desc: "Urutkan 4 langkah penelitian sejarah dari tahap pertama hingga penulisan karya sejarah!",
+                type: "sequence",
+                theme: {
+                    bg: "from-blue-950 via-slate-950 to-violet-950",
+                    glow1: "bg-blue-600/35",
+                    glow2: "bg-pink-600/30",
+                    border: "border-blue-500/50",
+                    badge: "bg-blue-500/20 text-blue-300 border-blue-400/40"
+                },
+                slots: [
+                    { step: 1, label: "Tahap 1", correctId: "m1" },
+                    { step: 2, label: "Tahap 2", correctId: "m2" },
+                    { step: 3, label: "Tahap 3", correctId: "m3" },
+                    { step: 4, label: "Tahap 4", correctId: "m4" }
+                ],
+                items: [
+                    { id: "m3", text: "Interpretasi (Penafsiran Makna)" },
+                    { id: "m1", text: "Heuristik (Pengumpulan Sumber)" },
+                    { id: "m4", text: "Historiografi (Penulisan Sejarah)" },
+                    { id: "m2", text: "Kritik / Verifikasi (Uji Keabsahan)" }
+                ]
+            },
+            {
+                badge: "Bukti Sejarah",
+                title: "Sumber Primer vs Sekunder",
+                desc: "Klasifikasikan bukti/sumber sejarah berikut ke dalam Sumber Primer atau Sumber Sekunder.",
+                type: "category",
+                theme: {
+                    bg: "from-cyan-950 via-slate-950 to-sky-950",
+                    glow1: "bg-cyan-500/35",
+                    glow2: "bg-teal-500/35",
+                    border: "border-cyan-500/50",
+                    badge: "bg-cyan-500/20 text-cyan-300 border-cyan-400/40"
+                },
+                targets: [
+                    { id: "primer", label: "Sumber Primer (Asli/Utama)", icon: "fa-certificate" },
+                    { id: "sekunder", label: "Sumber Sekunder (Turunan)", icon: "fa-book-bookmark" }
+                ],
+                items: [
+                    { id: "s1", text: "Prasasti Yupa peninggalan asli Kerajaan Kutai.", target: "primer" },
+                    { id: "s2", text: "Buku Teks Sejarah karya analisis sejarawan modern.", target: "sekunder" },
+                    { id: "s3", text: "Naskah Asli Teks Proklamasi tulisan tangan Soekarno.", target: "primer" },
+                    { id: "s4", text: "Artikel Ensiklopedia digital mengenai Perang Dunia II.", target: "sekunder" }
+                ]
+            },
+            {
+                badge: "Penjelajahan Samudra",
+                title: "Motivasi Kedatangan Bangsa Eropa",
+                desc: "Pasangkan pernyataan berikut dengan prinsip motivasi utama penjelajahan samudra (Gold, Gospel, Glory)!",
+                type: "category",
+                theme: {
+                    bg: "from-yellow-950 via-slate-950 to-orange-950",
+                    glow1: "bg-amber-500/40",
+                    glow2: "bg-orange-600/35",
+                    border: "border-amber-500/50",
+                    badge: "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                },
+                targets: [
+                    { id: "gold", label: "Gold (Kekayaan)", icon: "fa-coins" },
+                    { id: "gospel", label: "Gospel (Agama)", icon: "fa-cross" },
+                    { id: "glory", label: "Glory (Kejayaan)", icon: "fa-crown" }
+                ],
+                items: [
+                    { id: "g1", text: "Berburu keuntungan komoditas rempah-rempah yang bernilai mahal.", target: "gold" },
+                    { id: "g2", text: "Mencari daerah kekuasaan baru untuk memperluas wilayah dan hegemoni.", target: "glory" },
+                    { id: "g3", text: "Menyebarkan ajaran agama Kristen/Katolik ke wilayah dunia baru.", target: "gospel" }
+                ]
+            },
+            {
+                badge: "Kronologi Sejarah",
+                title: "Periodisasi Sejarah Indonesia",
+                desc: "Urutkan babak/periodisasi sejarah Indonesia berikut secara kronologis dari yang paling awal!",
+                type: "sequence",
+                theme: {
+                    bg: "from-fuchsia-950 via-slate-950 to-purple-950",
+                    glow1: "bg-fuchsia-600/35",
+                    glow2: "bg-rose-500/35",
+                    border: "border-fuchsia-500/50",
+                    badge: "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40"
+                },
+                slots: [
+                    { step: 1, label: "Awal", correctId: "k1" },
+                    { step: 2, label: "Kedua", correctId: "k2" },
+                    { step: 3, label: "Ketiga", correctId: "k3" },
+                    { step: 4, label: "Keempat", correctId: "k4" }
+                ],
+                items: [
+                    { id: "k2", text: "Masa Kerajaan Hindu-Buddha & Islam" },
+                    { id: "k4", text: "Masa Kemerdekaan & Reformasi" },
+                    { id: "k1", text: "Masa Praaksara (Prasejarah)" },
+                    { id: "k3", text: "Masa Kolonialisme & Imperialisme" }
+                ]
+            },
+            {
+                badge: "Penjelajah Bangsa Eropa",
+                title: "Bangsa Pelopor Penjelajahan Samudra",
+                desc: "Cocokkan tokoh penjelajah samudra dengan asal negara/bangsanya!",
+                type: "category",
+                theme: {
+                    bg: "from-sky-950 via-slate-950 to-indigo-950",
+                    glow1: "bg-sky-500/35",
+                    glow2: "bg-amber-500/30",
+                    border: "border-sky-500/50",
+                    badge: "bg-sky-500/20 text-sky-300 border-sky-400/40"
+                },
+                targets: [
+                    { id: "portugis", label: "Bangsa Portugis", icon: "fa-ship" },
+                    { id: "spanyol", label: "Bangsa Spanyol", icon: "fa-compass" }
+                ],
+                items: [
+                    { id: "b1", text: "Vasco da Gama & Alfonso de Albuquerque", target: "portugis" },
+                    { id: "b2", text: "Christopher Columbus & Ferdinand Magellan", target: "spanyol" },
+                    { id: "b3", text: "Berhasil menguasai Malaka pada tahun 1511.", target: "portugis" },
+                    { id: "b4", text: "Mendarat pertama kali di Kepulauan Filipina & Tidore.", target: "spanyol" }
+                ]
+            }
+        ];
+
+
+        /* ==================== NAVIGATION & SCREEN MANAGERS ==================== */
+        function showScreen(screenId) {
+            sounds.playClick();
+            ['screen-login', 'screen-dashboard', 'screen-game', 'screen-result'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === screenId) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
+        function openModal(modalId) {
+            sounds.playClick();
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            sounds.playClick();
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            sounds.playClick();
+            const nama = document.getElementById('input-nama').value.trim();
+            const kelas = document.getElementById('input-kelas').value.trim();
+
+            if (!nama || !kelas) return;
+
+            gameState.playerName = nama;
+            gameState.playerClass = kelas;
+
+            document.getElementById('dash-player-name').textContent = nama;
+            document.getElementById('dash-player-class').textContent = 'Kelas / Absen: ' + kelas;
+
+            showScreen('screen-dashboard');
+        }
+
+        function startGame() {
+            sounds.playClick();
+            gameState.score = 0;
+            gameState.currentRound = 0;
+            updateHUD();
+            renderRound();
+            showScreen('screen-game');
+        }
+
+        function confirmExitGame() {
+            sounds.playClick();
+            openModal('modal-exit-confirm');
+        }
+
+        function exitToDashboard() {
+            sounds.playClick();
+            closeModal('modal-exit-confirm');
+            showScreen('screen-dashboard');
+        }
+
+
+        /* ==================== GAME ENGINE & ROUND RENDERING ==================== */
+        function updateHUD() {
+            document.getElementById('game-hud-name').textContent = gameState.playerName;
+            document.getElementById('game-hud-level').textContent = `Ronde ${gameState.currentRound + 1} / ${challengeRounds.length}`;
+            document.getElementById('game-hud-score').textContent = gameState.score;
+
+            // Progress Bar
+            const progress = ((gameState.currentRound) / challengeRounds.length) * 100;
+            document.getElementById('game-progress-bar').style.width = `${progress}%`;
+
+            // Stars Logic
+            const star1 = document.getElementById('star-1');
+            const star2 = document.getElementById('star-2');
+            const star3 = document.getElementById('star-3');
+
+            star1.className = gameState.score >= 300 ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-slate-600';
+            star2.className = gameState.score >= 600 ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-slate-600';
+            star3.className = gameState.score >= 800 ? 'fa-solid fa-star text-amber-400' : 'fa-regular fa-star text-slate-600';
+        }
+
+        function renderRound() {
+            const round = challengeRounds[gameState.currentRound];
+            gameState.selectedCardId = null;
+            gameState.roundAnswered = false;
+            gameState.roundItemsLeft = round.items.length;
+
+            // Apply Dynamic 3D Topic Theme
+            const theme = round.theme || {
+                bg: "from-purple-950 via-slate-950 to-indigo-950",
+                glow1: "bg-purple-600/35",
+                glow2: "bg-indigo-600/35",
+                border: "border-purple-500/50",
+                badge: "bg-purple-500/20 text-purple-300 border-purple-400/40"
+            };
+
+            const bgMesh = document.getElementById('game-bg-mesh');
+            if (bgMesh) bgMesh.className = `absolute inset-0 bg-gradient-to-br ${theme.bg} transition-all duration-700 pointer-events-none -z-10`;
+
+            const orb1 = document.getElementById('game-orb-1');
+            const orb2 = document.getElementById('game-orb-2');
+            if (orb1) orb1.className = `absolute top-12 left-10 w-72 h-72 rounded-full filter blur-3xl opacity-60 animate-float-3d pointer-events-none -z-10 transition-all duration-700 ${theme.glow1}`;
+            if (orb2) orb2.className = `absolute bottom-12 right-10 w-80 h-80 rounded-full filter blur-3xl opacity-60 animate-float-3d-reverse pointer-events-none -z-10 transition-all duration-700 ${theme.glow2}`;
+
+            const arenaBox = document.getElementById('challenge-arena-box');
+            if (arenaBox) arenaBox.className = `my-4 flex-1 flex flex-col justify-center bg-slate-900/75 border ${theme.border} rounded-3xl p-4 sm:p-8 backdrop-blur-2xl relative overflow-hidden shadow-2xl transition-all duration-500`;
+
+            // Update Round Headers
+            const badgeEl = document.getElementById('challenge-badge');
+            if (badgeEl) {
+                badgeEl.textContent = round.badge;
+                badgeEl.className = `px-3.5 py-1 ${theme.badge} rounded-full text-xs font-black uppercase tracking-wider inline-block mb-2 shadow-sm transition-all`;
+            }
+            document.getElementById('challenge-title').textContent = round.title;
+            document.getElementById('challenge-desc').textContent = round.desc;
+
+            // Hide Next Button & Feedback Toast
+            document.getElementById('btn-next-round').classList.add('hidden');
+            const toast = document.getElementById('feedback-toast');
+            toast.className = "hidden flex-1 max-w-md text-center py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold shadow-lg transition-all";
+
+            const container = document.getElementById('challenge-content');
+            container.innerHTML = '';
+
+            if (round.type === 'category') {
+                renderCategoryChallenge(container, round);
+            } else if (round.type === 'sequence') {
+                renderSequenceChallenge(container, round);
+            }
+
+            updateHUD();
+        }
+
+        /* 1. CATEGORY TYPE CHALLENGE */
+        function renderCategoryChallenge(container, round) {
+            const poolWrapper = document.createElement('div');
+            poolWrapper.className = 'mb-6 flex flex-wrap gap-3 justify-center min-h-[100px] p-4 bg-slate-950/80 rounded-2xl border border-slate-700/60 items-center shadow-inner';
+            poolWrapper.id = 'items-pool';
+
+            if (round.checkMode) {
+                poolWrapper.addEventListener('click', (e) => {
+                    if (gameState.selectedCardId && (e.target === poolWrapper || e.target.id === 'items-pool')) {
+                        const card = document.getElementById(`card-${gameState.selectedCardId}`);
+                        if (card && card.dataset.draggable !== 'false') {
+                            poolWrapper.appendChild(card);
+                            card.classList.remove('selected-card', 'bg-rose-950', 'border-rose-500', 'text-rose-200');
+                            card.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-slate-100');
+                            gameState.selectedCardId = null;
+                            sounds.playClick();
+                        }
+                    }
+                });
+            }
+
+            const shuffledItems = [...round.items].sort(() => Math.random() - 0.5);
+
+            shuffledItems.forEach(item => {
+                const card = createCardElement(item);
+                poolWrapper.appendChild(card);
+            });
+
+            // Targets Grid
+            const targetsGrid = document.createElement('div');
+            targetsGrid.className = `grid grid-cols-1 sm:grid-cols-${Math.min(round.targets.length, 3)} gap-4`;
+
+            round.targets.forEach(target => {
+                const dropzone = document.createElement('div');
+                dropzone.dataset.targetId = target.id;
+                dropzone.className = 'dropzone min-h-[170px] bg-slate-950/90 border-2 border-dashed border-slate-700/80 rounded-2xl p-4 flex flex-col transition-all shadow-lg hover:border-amber-400/50';
+
+                dropzone.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-800 text-amber-400 pointer-events-none">
+                        <i class="fa-solid ${target.icon} text-lg"></i>
+                        <h4 class="font-bold text-xs sm:text-sm uppercase tracking-wider">${target.label}</h4>
+                    </div>
+                    <div class="drop-target-area flex-1 flex flex-col gap-2"></div>
+                `;
+
+                dropzone.addEventListener('click', () => handleTargetZoneTap(target.id));
+
+                targetsGrid.appendChild(dropzone);
+            });
+
+            container.appendChild(poolWrapper);
+            container.appendChild(targetsGrid);
+
+            if (round.checkMode) {
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'mt-6 text-center';
+                btnContainer.innerHTML = `
+                    <button id="btn-check-answer" onclick="checkCategoryRoundAnswers()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl text-sm shadow-xl shadow-amber-500/25 transition-all transform active:scale-95 inline-flex items-center gap-2 border border-amber-300/40">
+                        <i class="fa-solid fa-list-check text-base"></i>
+                        <span>PERIKSA JAWABAN</span>
+                    </button>
+                `;
+                container.appendChild(btnContainer);
+            }
+        }
+
+        /* 2. SEQUENCE TYPE CHALLENGE */
+        function renderSequenceChallenge(container, round) {
+            const poolWrapper = document.createElement('div');
+            poolWrapper.className = 'mb-6 flex flex-wrap gap-3 justify-center min-h-[100px] p-4 bg-slate-950/80 rounded-2xl border border-slate-700/60 items-center shadow-inner';
+            poolWrapper.id = 'items-pool';
+
+            const shuffledItems = [...round.items].sort(() => Math.random() - 0.5);
+
+            shuffledItems.forEach(item => {
+                const card = createCardElement(item);
+                poolWrapper.appendChild(card);
+            });
+
+            const slotsGrid = document.createElement('div');
+            slotsGrid.className = `grid grid-cols-1 sm:grid-cols-${round.slots.length} gap-4`;
+
+            round.slots.forEach(slot => {
+                const dropzone = document.createElement('div');
+                dropzone.dataset.step = slot.step;
+                dropzone.dataset.correctId = slot.correctId;
+                dropzone.className = 'dropzone min-h-[140px] bg-slate-950/90 border-2 border-dashed border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between transition-all shadow-lg hover:border-amber-400/50';
+
+                dropzone.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b border-slate-800 text-amber-400 pointer-events-none">
+                        <span class="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center text-xs font-bold border border-amber-500/40">${slot.step}</span>
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-slate-300">${slot.label}</h4>
+                    </div>
+                    <div class="drop-target-area flex-1 flex flex-col justify-center gap-2"></div>
+                `;
+
+                dropzone.addEventListener('click', () => handleSlotTap(slot));
+
+                slotsGrid.appendChild(dropzone);
+            });
+
+            container.appendChild(poolWrapper);
+            container.appendChild(slotsGrid);
+        }
+
+        /* CARD CREATION WITH 3D DEPTH STYLING */
+        function createCardElement(item) {
+            const card = document.createElement('div');
+            card.id = `card-${item.id}`;
+            card.dataset.id = item.id;
+            if (item.target) card.dataset.target = item.target;
+            card.dataset.draggable = "true";
+            card.className = 'draggable-item glass-3d-card cursor-pointer bg-slate-800/90 hover:bg-slate-700/90 border border-slate-600/60 text-slate-100 p-3.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2.5 max-w-xs select-none shadow-xl';
+            card.innerHTML = `<i class="fa-solid fa-grip-vertical text-amber-400/80 pointer-events-none"></i> <span class="pointer-events-none">${item.text}</span>`;
+
+            attachPointerDragEngine(card);
+            return card;
+        }
+
+        /* UNIVERSAL TOUCH & MOUSE POINTER DRAG ENGINE */
+        function attachPointerDragEngine(card) {
+            let startX = 0, startY = 0;
+            let currentX = 0, currentY = 0;
+            let isDragging = false;
+            let initialRect = null;
+
+            card.addEventListener('pointerdown', (e) => {
+                if (card.dataset.draggable === "false") return;
+                
+                // Active Tap
+                handleCardTap(card.dataset.id);
+
+                startX = e.clientX;
+                startY = e.clientY;
+                isDragging = false;
+                initialRect = card.getBoundingClientRect();
+
+                card.setPointerCapture(e.pointerId);
+
+                function onPointerMove(eMove) {
+                    const dx = eMove.clientX - startX;
+                    const dy = eMove.clientY - startY;
+
+                    // If moved more than 6px, treat as drag gesture
+                    if (!isDragging && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+                        isDragging = true;
+                        card.classList.add('dragging-active');
+                        card.style.position = 'fixed';
+                        card.style.left = `${initialRect.left}px`;
+                        card.style.top = `${initialRect.top}px`;
+                        card.style.width = `${initialRect.width}px`;
+                    }
+
+                    if (isDragging) {
+                        currentX = dx;
+                        currentY = dy;
+                        card.style.transform = `translate(${dx}px, ${dy}px)`;
+
+                        // Highlight Dropzone under pointer
+                        card.style.pointerEvents = 'none';
+                        const elBelow = document.elementFromPoint(eMove.clientX, eMove.clientY);
+                        card.style.pointerEvents = 'auto';
+
+                        document.querySelectorAll('.dropzone, #items-pool').forEach(dz => dz.classList.remove('dropzone-active'));
+                        if (elBelow) {
+                            const targetDropzone = elBelow.closest('.dropzone, #items-pool');
+                            if (targetDropzone) targetDropzone.classList.add('dropzone-active');
+                        }
+                    }
+                }
+
+                function onPointerUp(eUp) {
+                    card.releasePointerCapture(eUp.pointerId);
+                    card.removeEventListener('pointermove', onPointerMove);
+                    card.removeEventListener('pointerup', onPointerUp);
+                    card.removeEventListener('pointercancel', onPointerUp);
+
+                    document.querySelectorAll('.dropzone, #items-pool').forEach(dz => dz.classList.remove('dropzone-active'));
+
+                    if (isDragging) {
+                        card.classList.remove('dragging-active');
+                        card.style.position = '';
+                        card.style.left = '';
+                        card.style.top = '';
+                        card.style.width = '';
+                        card.style.transform = '';
+
+                        // Find drop target under final pointer coordinate
+                        card.style.pointerEvents = 'none';
+                        const elBelow = document.elementFromPoint(eUp.clientX, eUp.clientY);
+                        card.style.pointerEvents = 'auto';
+
+                        if (elBelow) {
+                            const round = challengeRounds[gameState.currentRound];
+                            const targetDropzone = elBelow.closest('.dropzone');
+                            const poolDropzone = elBelow.closest('#items-pool');
+
+                            if (targetDropzone) {
+                                if (round.type === 'category') {
+                                    processCategoryAnswer(card.dataset.id, targetDropzone.dataset.targetId);
+                                } else if (round.type === 'sequence') {
+                                    processSequenceAnswer(card.dataset.id, {
+                                        step: parseInt(targetDropzone.dataset.step, 10),
+                                        correctId: targetDropzone.dataset.correctId
+                                    });
+                                }
+                            } else if (poolDropzone && round.checkMode) {
+                                poolDropzone.appendChild(card);
+                                card.classList.remove('selected-card', 'bg-rose-950', 'border-rose-500', 'text-rose-200');
+                                card.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-slate-100');
+                                gameState.selectedCardId = null;
+                            }
+                        }
+                    }
+                }
+
+                card.addEventListener('pointermove', onPointerMove);
+                card.addEventListener('pointerup', onPointerUp);
+                card.addEventListener('pointercancel', onPointerUp);
+            });
+        }
+
+        function handleCardTap(cardId) {
+            sounds.playClick();
+            const prevSelected = gameState.selectedCardId;
+
+            if (prevSelected) {
+                const prevCard = document.getElementById(`card-${prevSelected}`);
+                if (prevCard) prevCard.classList.remove('selected-card');
+            }
+
+            if (prevSelected === cardId) {
+                gameState.selectedCardId = null;
+            } else {
+                gameState.selectedCardId = cardId;
+                const currentCard = document.getElementById(`card-${cardId}`);
+                if (currentCard) currentCard.classList.add('selected-card');
+            }
+        }
+
+        function showFeedback(isSuccess, message) {
+            const toast = document.getElementById('feedback-toast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.remove('hidden', 'bg-emerald-950', 'border-emerald-500', 'text-emerald-300', 'bg-rose-950', 'border-rose-500', 'text-rose-300');
+
+            if (isSuccess) {
+                toast.classList.add('bg-emerald-950', 'border', 'border-emerald-500', 'text-emerald-300');
+            } else {
+                toast.classList.add('bg-rose-950', 'border', 'border-rose-500', 'text-rose-300');
+            }
+        }
+
+        function handleTargetZoneTap(targetId) {
+            if (!gameState.selectedCardId) return;
+            processCategoryAnswer(gameState.selectedCardId, targetId);
+            gameState.selectedCardId = null;
+        }
+
+        function handleSlotTap(slot) {
+            if (!gameState.selectedCardId) return;
+            processSequenceAnswer(gameState.selectedCardId, slot);
+            gameState.selectedCardId = null;
+        }
+
+        function processSequenceAnswer(cardId, slot) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card || card.dataset.draggable === "false") return;
+
+            const targetZone = document.querySelector(`[data-step="${slot.step}"] .drop-target-area`);
+            if (!targetZone) return;
+
+            if (cardId === slot.correctId) {
+                sounds.playCorrect();
+                card.classList.remove('selected-card', 'bg-slate-800', 'hover:bg-slate-700');
+                card.classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+                card.dataset.draggable = "false";
+
+                targetZone.appendChild(card);
+                showFeedback(true, "Urutan Tepat! +100 Skor");
+                gameState.score += 100;
+                gameState.roundItemsLeft--;
+
+                if (gameState.roundItemsLeft === 0) {
+                    completeRound();
+                }
+            } else {
+                sounds.playWrong();
+                card.classList.remove('selected-card');
+                card.classList.add('animate-bounce-short', 'border-rose-500');
+                setTimeout(() => card.classList.remove('border-rose-500'), 1000);
+                showFeedback(false, "Urutan belum tepat! Coba pikirkan kembali kronologinya.");
+            }
+            updateHUD();
+        }
+
+        /* ==================== ANSWER VALIDATION & FEEDBACK ==================== */
+        function processCategoryAnswer(cardId, targetId) {
+            const round = challengeRounds[gameState.currentRound];
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card || card.dataset.draggable === "false") return;
+
+            const targetZone = document.querySelector(`[data-target-id="${targetId}"] .drop-target-area`);
+            if (!targetZone) return;
+
+            if (round.checkMode) {
+                card.classList.remove('selected-card', 'bg-rose-950', 'border-rose-500', 'text-rose-200');
+                card.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-slate-100');
+                targetZone.appendChild(card);
+                sounds.playClick();
+                return;
+            }
+
+            const correctTarget = card.dataset.target;
+
+            if (correctTarget === targetId) {
+                // BENAR
+                sounds.playCorrect();
+                card.classList.remove('selected-card', 'bg-slate-800', 'hover:bg-slate-700');
+                card.classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+                card.dataset.draggable = "false";
+
+                targetZone.appendChild(card);
+                showFeedback(true, "Jawaban Tepat! +100 Skor");
+                gameState.score += 100;
+                gameState.roundItemsLeft--;
+
+                if (gameState.roundItemsLeft === 0) {
+                    completeRound();
+                }
+            } else {
+                // SALAH
+                sounds.playWrong();
+                card.classList.remove('selected-card');
+                card.classList.add('animate-bounce-short', 'border-rose-500');
+                setTimeout(() => card.classList.remove('border-rose-500'), 1000);
+                showFeedback(false, "Kurang Tepat! Coba periksa kembali konsep materi.");
+            }
+            updateHUD();
+        }
+
+        function checkCategoryRoundAnswers() {
+            const round = challengeRounds[gameState.currentRound];
+            const pool = document.getElementById('items-pool');
+            
+            if (pool && pool.children.length > 0) {
+                sounds.playWrong();
+                showFeedback(false, "Silakan masukkan semua kartu ke dalam kotak terlebih dahulu!");
+                return;
+            }
+
+            let allCorrect = true;
+            let newlyCorrectCount = 0;
+
+            round.targets.forEach(target => {
+                const zone = document.querySelector(`[data-target-id="${target.id}"] .drop-target-area`);
+                if (!zone) return;
+
+                const cards = Array.from(zone.querySelectorAll('[data-id]'));
+                cards.forEach(card => {
+                    const correctTarget = card.dataset.target;
+                    if (correctTarget === target.id) {
+                        if (!card.dataset.scored) {
+                            card.dataset.scored = "true";
+                            newlyCorrectCount++;
+                        }
+                        card.classList.remove('selected-card', 'bg-slate-800', 'hover:bg-slate-700', 'bg-rose-950', 'border-rose-500', 'text-rose-200');
+                        card.classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+                        card.dataset.draggable = "false";
+                    } else {
+                        allCorrect = false;
+                        card.classList.remove('selected-card', 'bg-slate-800', 'hover:bg-slate-700');
+                        card.classList.add('bg-rose-950', 'border-rose-500', 'text-rose-200', 'animate-bounce-short');
+                        setTimeout(() => card.classList.remove('animate-bounce-short'), 600);
+                    }
+                });
+            });
+
+            if (newlyCorrectCount > 0) {
+                gameState.score += newlyCorrectCount * 100;
+                updateHUD();
+            }
+
+            if (allCorrect) {
+                sounds.playCorrect();
+                const btnCheck = document.getElementById('btn-check-answer');
+                if (btnCheck) btnCheck.classList.add('hidden');
+                completeRound();
+            } else {
+                sounds.playWrong();
+                showFeedback(false, "Beberapa kartu masih salah tempat (berwarna merah). Pindahkan kartu merah ke kotak yang tepat!");
+            }
+        }
+
+        function completeRound() {
+            gameState.roundAnswered = true;
+            document.getElementById('btn-next-round').classList.remove('hidden');
+            showFeedback(true, "Sempurna! Seluruh item ronde ini berhasil diselesaikan.");
+        }
+
+        function nextRound() {
+            sounds.playClick();
+            if (gameState.currentRound < challengeRounds.length - 1) {
+                gameState.currentRound++;
+                renderRound();
+            } else {
+                finishGame();
+            }
+        }
+
+        function finishGame() {
+            sounds.playVictory();
+            
+            // Highscore & LocalStorage Save
+            if (gameState.score > gameState.highScore) {
+                gameState.highScore = gameState.score;
+                localStorage.setItem('gim_sejarah_highscore', gameState.highScore.toString());
+                document.getElementById('dash-high-score').textContent = gameState.highScore;
+            }
+
+            document.getElementById('result-final-score').textContent = gameState.score;
+            
+            // Stars Result Logic
+            const resultStars = document.getElementById('result-stars');
+            resultStars.innerHTML = `
+                <i class="${gameState.score >= 300 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                <i class="${gameState.score >= 600 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                <i class="${gameState.score >= 800 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+            `;
+
+            showScreen('screen-result');
+        }
+    </script>
+</body>
+</html>
